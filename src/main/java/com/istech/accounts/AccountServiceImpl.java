@@ -1,6 +1,7 @@
 package com.istech.accounts;
 
 import com.istech.accounts.dto.AccountDto;
+import com.istech.accounts.dto.InputAccountDto;
 import com.istech.accounts.exceptions.AccountNotFoundException;
 import com.istech.accounts.models.Account;
 import com.istech.service.MapperService;
@@ -14,6 +15,13 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
     private final MapperService mapperService;
     private final AccountRepository accountRepository;
+
+    @Override
+    public AccountDto createAccount(InputAccountDto accountDto) {
+        Account newAccount = mapperService.toAccount(accountDto);
+        newAccount = accountRepository.save(newAccount);
+        return mapperService.toAccountDto(newAccount);
+    }
 
     @Override
     public AccountDto getAccountById(UUID accountId) {

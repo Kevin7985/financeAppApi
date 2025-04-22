@@ -2,6 +2,7 @@ package com.istech.accounts;
 
 import com.istech.accounts.dto.AccountDto;
 import com.istech.accounts.dto.InputAccountDto;
+import com.istech.utils.models.ListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,5 +32,14 @@ public class AccountController {
     @Operation(summary = "Получение счёта по ID")
     public AccountDto getAccountById(@PathVariable UUID accountId) {
         return accountService.getAccountById(accountId);
+    }
+
+    @GetMapping
+    @Operation(summary = "Список всех счетов")
+    public ListResponse<AccountDto> searchAccounts(
+            @RequestParam(required = false, defaultValue = "") String q,
+            @RequestParam(required = false, defaultValue = "0") Long offset,
+            @RequestParam(required = false, defaultValue = "20") Integer limit) {
+        return accountService.searchAccounts(q, offset, limit);
     }
 }

@@ -46,4 +46,10 @@ public class OperationController {
     ) {
         return operationService.searchOperations(accountId, offset, limit);
     }
+
+    @DeleteMapping("/{operationId}")
+    @Operation(summary = "Удаление операции по ID")
+    public void deleteOperationById(@PathVariable UUID operationId) {
+        operationService.deleteOperationById(operationId);
+    }
 }

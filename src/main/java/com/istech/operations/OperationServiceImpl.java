@@ -5,6 +5,7 @@ import com.istech.accounts.exceptions.AccountNotFoundException;
 import com.istech.accounts.models.Account;
 import com.istech.operations.dto.InputOperationDto;
 import com.istech.operations.dto.OperationDto;
+import com.istech.operations.exceptions.OperationNotFoundException;
 import com.istech.operations.exceptions.OperationValidationException;
 import com.istech.operations.models.Operation;
 import com.istech.operations.models.OperationType;
@@ -65,6 +66,14 @@ public class OperationServiceImpl implements OperationService {
                 operationRepository.findByAccount_IdCount(accountId),
                 results
         );
+    }
+
+    @Override
+    public void deleteOperationById(UUID operationId) {
+        Operation o = operationRepository.findById(operationId)
+                .orElseThrow(() -> new OperationNotFoundException("Операция с данным ID не найдена"));
+
+        operationRepository.deleteById(operationId);
     }
 
     @Override

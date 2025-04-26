@@ -10,4 +10,5 @@ public interface OperationService {
     OperationDto addOperation(UUID accountId, InputOperationDto operationDto);
     OperationDto getOperationByAccountIdAndOperationId(UUID accountId, UUID operationId);
     ListResponse<OperationDto> searchOperations(UUID accountId, Long offset, Integer limit);
+    void deleteOperationById(UUID operationId);
 }

@@ -3,6 +3,7 @@ package com.istech.exceptions;
 import com.istech.accounts.exceptions.AccountNotFoundException;
 import com.istech.accounts.exceptions.AccountValidationException;
 import com.istech.exceptions.models.ApiError;
+import com.istech.operations.exceptions.OperationNotFoundException;
 import com.istech.operations.exceptions.OperationValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler({
-            AccountNotFoundException.class
+            AccountNotFoundException.class,
+            OperationNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError entityNotFoundExceptionHandler(final Exception e) {

@@ -2,6 +2,7 @@ package com.istech.operations;
 
 import com.istech.operations.dto.InputOperationDto;
 import com.istech.operations.dto.OperationDto;
+import com.istech.utils.models.ListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,5 +35,15 @@ public class OperationController {
             @PathVariable UUID accountId,
             @PathVariable UUID operationId) {
         return operationService.getOperationByAccountIdAndOperationId(accountId, operationId);
+    }
+
+    @GetMapping("/{accountId}/operations")
+    @Operation(summary = "Получение списка операций по счёту")
+    public ListResponse<OperationDto> searchOperations(
+            @PathVariable UUID accountId,
+            @RequestParam(required = false, defaultValue = "0") Long offset,
+            @RequestParam(required = false, defaultValue = "20") Integer limit
+    ) {
+        return operationService.searchOperations(accountId, offset, limit);
     }
 }

@@ -9,9 +9,14 @@ import com.istech.operations.exceptions.OperationValidationException;
 import com.istech.operations.models.Operation;
 import com.istech.operations.models.OperationType;
 import com.istech.service.MapperService;
+import com.istech.utils.models.ListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,6 +48,23 @@ public class OperationServiceImpl implements OperationService {
         o.setAccount(a);
         o = operationRepository.save(o);
         return mapperService.toOperationDto(o);
+    }
+
+    @Override
+    public ListResponse<OperationDto> searchOperations(UUID accountId, Long offset, Integer limit) {
+        Account a = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Счёт с данным ID не найден"));
+
+        Pageable pageable = PageRequest.of((int) (offset / limit), limit, Sort.by("createdAt").descending());
+
+        List<OperationDto> results = operationRepository.findByAccount_IdOrderByCreatedAtDesc(accountId, pageable).stream()
+                .map(mapperService::toOperationDto)
+                .toList();
+
+        return new ListResponse<>(
+                operationRepository.findByAccount_IdCount(accountId),
+                results
+        );
     }
 
     @Override

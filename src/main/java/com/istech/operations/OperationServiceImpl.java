@@ -73,6 +73,15 @@ public class OperationServiceImpl implements OperationService {
         Operation o = operationRepository.findById(operationId)
                 .orElseThrow(() -> new OperationNotFoundException("Операция с данным ID не найдена"));
 
+        Account a = o.getAccount();
+
+        if (o.getOperationType().equals(OperationType.OUTCOME)) {
+            a.setBalance(a.getBalance() + o.getAmount());
+        } else {
+            a.setBalance(a.getBalance() - o.getAmount());
+        }
+
+        o.setAccount(accountRepository.save(a));
         operationRepository.deleteById(operationId);
     }
 

@@ -18,21 +18,38 @@ public class MapperService {
     private final OperationMapper operationMapper;
 
     public Account toAccount(InputAccountDto accountDto) {
+        if (accountDto == null) {
+            return null;
+        }
+
         return accountMapper.toAccount(accountDto);
     }
 
     public AccountDto toAccountDto(Account account) {
+        if (account == null) {
+            return null;
+        }
+
         return accountMapper.toAccountDto(account);
     }
 
     public Operation toOperation(InputOperationDto operationDto) {
+        if (operationDto == null) {
+            return null;
+        }
+
         return operationMapper.toOperation(operationDto);
     }
 
     public OperationDto toOperationDto(Operation operation) {
+        if (operation == null) {
+            return null;
+        }
+
         return operationMapper.toOperationDto(
                 operation,
-                toAccountDto(operation.getAccount())
+                toAccountDto(operation.getFromAccount()),
+                toAccountDto(operation.getToAccount())
         );
     }
 }

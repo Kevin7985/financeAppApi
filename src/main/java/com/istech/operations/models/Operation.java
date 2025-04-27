@@ -20,8 +20,12 @@ public class Operation {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "from_account_id")
+    private Account fromAccount;
+
+    @ManyToOne
+    @JoinColumn(name = "to_account_id")
+    private Account toAccount;
 
     @Enumerated(EnumType.STRING)
     private OperationType operationType;

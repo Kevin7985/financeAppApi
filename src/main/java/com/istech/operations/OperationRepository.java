@@ -10,8 +10,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.UUID;
 
 public interface OperationRepository extends JpaRepository<Operation, UUID> {
-    Page<Operation> findByAccount_IdOrderByCreatedAtDesc(UUID accountId, Pageable pageable);
+    @Query(
+            "SELECT o FROM Operation o WHERE " +
+            "(o.fromAccount.id = :aid) OR (o.toAccount.id = :aid) " +
+            "ORDER BY o.createdAt DESC"
+    )
+    Page<Operation> findByAccount_IdOrderByCreatedAtDesc(@Param("aid") UUID accountId, Pageable pageable);
 
-    @Query("SELECT COUNT(o.id) FROM Operation o WHERE o.account.id = :aid")
+    @Query("SELECT COUNT(o.id) FROM Operation o WHERE (o.fromAccount.id = :aid) OR (o.toAccount.id = :aid)")
     Long findByAccount_IdCount(@Param("aid") UUID accountId);
 }

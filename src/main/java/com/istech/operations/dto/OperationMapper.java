@@ -1,6 +1,7 @@
 package com.istech.operations.dto;
 
 import com.istech.accounts.dto.AccountDto;
+import com.istech.accounts.models.Account;
 import com.istech.operations.models.Operation;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ public class OperationMapper {
         return new Operation(
                 null,
                 null,
+                null,
                 operationDto.getOperationType(),
                 operationDto.getDescription(),
                 operationDto.getAmount(),
@@ -19,10 +21,11 @@ public class OperationMapper {
         );
     }
 
-    public OperationDto toOperationDto(Operation operation, AccountDto accountDto) {
+    public OperationDto toOperationDto(Operation operation, AccountDto fromAccountDto, AccountDto toAccountDto) {
         return new OperationDto(
                 operation.getId(),
-                accountDto,
+                fromAccountDto,
+                toAccountDto,
                 operation.getOperationType(),
                 operation.getDescription(),
                 operation.getAmount(),

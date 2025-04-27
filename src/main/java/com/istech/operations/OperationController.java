@@ -21,30 +21,30 @@ import java.util.UUID;
 public class OperationController {
     private final OperationService operationService;
 
-    @PostMapping("/{accountId}/operations")
+    @PostMapping("/{fromAccountId}/operations")
     @Operation(summary = "Добавление новой операции")
     public OperationDto addOperation(
-            @PathVariable UUID accountId,
+            @PathVariable UUID fromAccountId,
             @RequestBody @Valid InputOperationDto operationDto) {
-        return operationService.addOperation(accountId, operationDto);
+        return operationService.addOperation(fromAccountId, operationDto);
     }
 
-    @GetMapping("/{accountId}/operations/{operationId}")
+    @GetMapping("/{fromAccountId}/operations/{operationId}")
     @Operation(summary = "Получение операции по ID счёта и ID операции")
     public OperationDto getOperationByAccountIdAndOperationId(
-            @PathVariable UUID accountId,
+            @PathVariable UUID fromAccountId,
             @PathVariable UUID operationId) {
-        return operationService.getOperationByAccountIdAndOperationId(accountId, operationId);
+        return operationService.getOperationByAccountIdAndOperationId(fromAccountId, operationId);
     }
 
-    @GetMapping("/{accountId}/operations")
+    @GetMapping("/{fromAccountId}/operations")
     @Operation(summary = "Получение списка операций по счёту")
     public ListResponse<OperationDto> searchOperations(
-            @PathVariable UUID accountId,
+            @PathVariable UUID fromAccountId,
             @RequestParam(required = false, defaultValue = "0") Long offset,
             @RequestParam(required = false, defaultValue = "20") Integer limit
     ) {
-        return operationService.searchOperations(accountId, offset, limit);
+        return operationService.searchOperations(fromAccountId, offset, limit);
     }
 
     @DeleteMapping("/{operationId}")

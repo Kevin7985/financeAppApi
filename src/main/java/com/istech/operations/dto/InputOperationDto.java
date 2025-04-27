@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +16,8 @@ public class InputOperationDto {
     @NotNull(message = "Тип операции не может быть пустым")
     @NotNull(message = "Тип операции не может быть пустым")
     private OperationType operationType;
+
+    private UUID toAccountId;
 
     private String description;
 

@@ -35,19 +35,38 @@ public class OperationServiceImpl implements OperationService {
 
         Operation o = mapperService.toOperation(operationDto);
 
-        if (o.getOperationType().equals(OperationType.OUTCOME)) {
+        if (o.getOperationType().equals(OperationType.TRANSFER)) {
+            Account b = accountRepository.findById(operationDto.getToAccountId())
+                    .orElseThrow(() -> new AccountNotFoundException("Счёт-получатель с данным ID не найден"));
+
             if (a.getBalance() < o.getAmount()) {
                 throw new OperationValidationException("Сумма операции не может быть больше той, которая есть на балансе");
             }
 
             a.setBalance(a.getBalance() - o.getAmount());
-        } else {
-            a.setBalance(a.getBalance() + o.getAmount());
-        }
-        a = accountRepository.save(a);
+            b.setBalance(b.getBalance() + o.getAmount());
 
-        o.setAccount(a);
-        o = operationRepository.save(o);
+            a = accountRepository.save(a);
+            b = accountRepository.save(b);
+
+            o.setFromAccount(a);
+            o.setToAccount(b);
+        } else {
+            if (o.getOperationType().equals(OperationType.OUTCOME)) {
+                if (a.getBalance() < o.getAmount()) {
+                    throw new OperationValidationException("Сумма операции не может быть больше той, которая есть на балансе");
+                }
+
+                a.setBalance(a.getBalance() - o.getAmount());
+            } else {
+                a.setBalance(a.getBalance() + o.getAmount());
+            }
+            a = accountRepository.save(a);
+
+            o.setFromAccount(a);
+        }
+
+         o = operationRepository.save(o);
         return mapperService.toOperationDto(o);
     }
 
@@ -73,15 +92,26 @@ public class OperationServiceImpl implements OperationService {
         Operation o = operationRepository.findById(operationId)
                 .orElseThrow(() -> new OperationNotFoundException("Операция с данным ID не найдена"));
 
-        Account a = o.getAccount();
+        Account a = o.getFromAccount();
 
-        if (o.getOperationType().equals(OperationType.OUTCOME)) {
+        if (o.getOperationType().equals(OperationType.TRANSFER)) {
+            Account b = o.getToAccount();
+
             a.setBalance(a.getBalance() + o.getAmount());
+            b.setBalance(b.getBalance() - o.getAmount());
+
+            o.setFromAccount(accountRepository.save(a));
+            o.setToAccount(accountRepository.save(b));
         } else {
-            a.setBalance(a.getBalance() - o.getAmount());
+            if (o.getOperationType().equals(OperationType.OUTCOME)) {
+                a.setBalance(a.getBalance() + o.getAmount());
+            } else {
+                a.setBalance(a.getBalance() - o.getAmount());
+            }
+
+            o.setFromAccount(accountRepository.save(a));
         }
 
-        o.setAccount(accountRepository.save(a));
         operationRepository.deleteById(operationId);
     }
 

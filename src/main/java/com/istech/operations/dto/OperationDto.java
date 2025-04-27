@@ -12,7 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OperationDto {
     private final UUID id;
-    private final AccountDto account;
+    private final AccountDto fromAccount;
+    private final AccountDto toAccount;
     private final OperationType operationType;
     private final String description;
     private final Long amount;
